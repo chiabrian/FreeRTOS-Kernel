@@ -68,7 +68,7 @@
 */
 
 /*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the PIC32MX port.
+ * Implementation of functions defined in portable.h for the PIC32MM port.
   *----------------------------------------------------------*/
 
 #ifndef __XC
@@ -258,7 +258,7 @@ static void prvTaskExitError( void )
  */
 __attribute__(( weak )) void vApplicationSetupTickTimerInterrupt( void )
 {
-const uint32_t ulCompareMatch = ( (configPERIPHERAL_CLOCK_HZ / portTIMER_PRESCALE) / configTICK_RATE_HZ ) - 1;
+const uint32_t ulCompareMatch = ( (configPERIPHERAL_CLOCK_HZ / portTIMER_PRESCALE) / configTICK_RATE_HZ ) - 1UL;
 
 	T1CON = 0x0000;
 	T1CONbits.TCKPS = 1;;

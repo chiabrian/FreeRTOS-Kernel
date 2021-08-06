@@ -135,7 +135,7 @@ ensure API function and interrupt entry is as fast and as simple as possible. */
 #ifdef configASSERT
 	#define portDISABLE_INTERRUPTS()											\
 	{																			\
-	uint32_t ulStatus;														\
+	uint32_t ulStatus;															\
 																				\
 		/* Mask interrupts at and below the kernel interrupt priority. */		\
 		ulStatus = _CP0_GET_STATUS();											\
@@ -150,7 +150,7 @@ ensure API function and interrupt entry is as fast and as simple as possible. */
 #else /* configASSERT */
 	#define portDISABLE_INTERRUPTS()										\
 	{																		\
-	uint32_t ulStatus;													\
+	uint32_t ulStatus;														\
 																			\
 		/* Mask interrupts at and below the kernel interrupt priority. */	\
 		ulStatus = _CP0_GET_STATUS();										\
@@ -161,7 +161,7 @@ ensure API function and interrupt entry is as fast and as simple as possible. */
 
 #define portENABLE_INTERRUPTS()											\
 {																		\
-uint32_t ulStatus;													\
+uint32_t ulStatus;														\
 																		\
 	/* Unmask all interrupts. */										\
 	ulStatus = _CP0_GET_STATUS();										\
@@ -198,7 +198,7 @@ extern void vPortClearInterruptMaskFromISR( UBaseType_t );
 
 	/*-----------------------------------------------------------*/
 
-	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31 - _clz( ( uxReadyPriorities ) ) )
+	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - _clz( ( uxReadyPriorities ) ) )
 
 #endif /* taskRECORD_READY_PRIORITY */
 
@@ -208,7 +208,7 @@ extern void vPortClearInterruptMaskFromISR( UBaseType_t );
 
 #define portYIELD()								\
 {												\
-uint32_t ulCause;							\
+uint32_t ulCause;								\
 												\
 	/* Trigger software interrupt. */			\
 	ulCause = _CP0_GET_CAUSE();					\
@@ -228,10 +228,7 @@ extern volatile UBaseType_t uxInterruptNesting;
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 /*-----------------------------------------------------------*/
 
-#define portEND_SWITCHING_ISR( xSwitchRequired )	if( xSwitchRequired )	\
-													{						\
-														portYIELD();		\
-													}
+#define portEND_SWITCHING_ISR( xSwitchRequired )	do { if( xSwitchRequired ) { portYIELD(); } } while( 0 )
 
 /* Required by the kernel aware debugger. */
 #ifdef __DEBUG
